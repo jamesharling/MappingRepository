@@ -19,7 +19,6 @@ namespace MappingRepository
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
-            this.mapperConfig = this.mapper.ConfigurationProvider;
         }
 
         public virtual TDestinationKey Add(TDestination obj)
@@ -113,7 +112,9 @@ namespace MappingRepository
 
         private IMappingRepositoryDbContext dbContext;
         private IMapper mapper;
-        private IConfigurationProvider mapperConfig;
+
+        private IConfigurationProvider mapperConfig => this.mapper.ConfigurationProvider;
+
         private DbSet<TEntity> dbSet => this.dbContext.Set<TEntity>();
     }
 }

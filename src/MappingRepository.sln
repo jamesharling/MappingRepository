@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MappingRepository", "Mappin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MappingRepository.Interfaces", "MappingRepository.Interfaces\MappingRepository.Interfaces.csproj", "{93E54348-7E8B-4FD3-9165-742D7EB09F8C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MappingRepository.Tests", "MappingRepository.Tests\MappingRepository.Tests.csproj", "{AE180F77-A439-48AB-9991-99BA79552CC3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{93E54348-7E8B-4FD3-9165-742D7EB09F8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93E54348-7E8B-4FD3-9165-742D7EB09F8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93E54348-7E8B-4FD3-9165-742D7EB09F8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE180F77-A439-48AB-9991-99BA79552CC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE180F77-A439-48AB-9991-99BA79552CC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE180F77-A439-48AB-9991-99BA79552CC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE180F77-A439-48AB-9991-99BA79552CC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
