@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MappingRepository.Interfaces;
-using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -41,7 +40,7 @@ namespace MappingRepository
             return this.dbContext.SaveChanges();
         }
 
-        public bool Any(Expression<Func<TEntity, bool>> predicate)
+        public virtual bool Any(Expression<Func<TEntity, bool>> predicate)
         {
             return this.dbSet.Any(predicate);
         }
@@ -90,22 +89,22 @@ namespace MappingRepository
             return this.dbSet.Where(x => x.Id.Equals(id)).ProjectToSingleOrDefault<TDestination>(this.mapperConfig);
         }
 
-        public IPagedList<TDestination> PagedList<TKey>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, TKey>> order, bool isAscending, int pageNumber, int pageSize)
-        {
-            return this.dbSet.Where(predicate).OrderBy(order, isAscending).ProjectToQueryable<TDestination>(this.mapperConfig).ToPagedList(pageNumber, pageSize);
-        }
-
         public TDestination SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
             return this.dbSet.Where(predicate).ProjectToSingleOrDefault<TDestination>(this.mapperConfig);
         }
 
-        protected IList<TDestination> GetAll()
+        protected IQueryable<TDestination> AsQueryable()
         {
-            return this.dbSet.ProjectToList<TDestination>(this.mapperConfig);
+            return this.dbSet.ProjectToQueryable<TDestination>(this.mapperConfig);
         }
 
-        protected IQueryable<TCustomType> MapToCustomType<TCustomType>()
+        protected IQueryable<TDestination> AsQueryable(Expression<Func<TEntity, bool>> predicate)
+        {
+            return this.dbSet.Where(predicate).ProjectToQueryable<TDestination>(this.mapperConfig);
+        }
+
+        protected IQueryable<TCustomType> ProjectTo<TCustomType>()
         {
             return this.dbSet.ProjectToQueryable<TCustomType>(this.mapperConfig);
         }
@@ -113,8 +112,8 @@ namespace MappingRepository
         private IMappingRepositoryDbContext dbContext;
         private IMapper mapper;
 
-        private IConfigurationProvider mapperConfig => this.mapper.ConfigurationProvider;
-
         private DbSet<TEntity> dbSet => this.dbContext.Set<TEntity>();
+
+        private IConfigurationProvider mapperConfig => this.mapper.ConfigurationProvider;
     }
 }

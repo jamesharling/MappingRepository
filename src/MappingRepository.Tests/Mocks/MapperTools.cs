@@ -8,9 +8,7 @@ namespace MappingRepository.Tests.Mocks
         {
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<Entities.Customer, DomainObjects.Customer>()
-                    .ForMember(d => d.Name, o => o.MapFrom(s => $"{s.FirstName} {s.Surname}"));
-
+                cfg.CreateMap<Entities.Customer, DomainObjects.Customer>();
                 cfg.CreateMap<Entities.Order, DomainObjects.Order>();
             });
 
