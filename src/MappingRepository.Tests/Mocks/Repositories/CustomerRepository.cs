@@ -2,9 +2,9 @@
 using MappingRepository.Interfaces;
 using System;
 
-namespace MappingRepository.Tests.Mocks
+namespace MappingRepository.Tests.Mocks.Repositories
 {
-    internal class CustomerRepository : MappingRepository<Entities.Customer, Guid, DomainObjects.Customer, Guid>
+    public class CustomerRepository : MappingRepository<Entities.Customer, Guid, DomainObjects.Customer, Guid>
     {
         public CustomerRepository(IMappingRepositoryDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         { }

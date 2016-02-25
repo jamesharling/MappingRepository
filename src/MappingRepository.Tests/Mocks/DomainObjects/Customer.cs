@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MappingRepository.Tests.Mocks.DomainObjects
 {
-    internal class Customer : IMappingRepositoryDestination<Guid>
+    public class Customer : IMappingRepositoryDestination<Guid>
     {
         public Guid Id { get; set; }
 

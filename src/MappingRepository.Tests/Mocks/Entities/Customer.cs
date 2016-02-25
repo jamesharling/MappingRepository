@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MappingRepository.Tests.Mocks.Entities
 {
-    internal class Customer : IMappingRepositoryEntity<Guid>
+    public class Customer : IMappingRepositoryEntity<Guid>
     {
         public Guid Id { get; set; }
 

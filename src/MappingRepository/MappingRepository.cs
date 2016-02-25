@@ -11,8 +11,8 @@ namespace MappingRepository
     public abstract class MappingRepository<TEntity, TEntityKey, TDestination, TDestinationKey>
         where TEntity : class, IMappingRepositoryEntity<TEntityKey>
         where TDestination : IMappingRepositoryDestination<TDestinationKey>
-        where TEntityKey : IEquatable<TEntityKey>
-        where TDestinationKey : IEquatable<TDestinationKey>
+        where TEntityKey : IEquatable<TEntityKey>, IEquatable<TDestinationKey>
+        where TDestinationKey : IEquatable<TDestinationKey>, IEquatable<TEntityKey>
     {
         public MappingRepository(IMappingRepositoryDbContext dbContext, IMapper mapper)
         {
@@ -45,11 +45,6 @@ namespace MappingRepository
             return this.dbSet.Any(predicate);
         }
 
-        public virtual void Delete(TEntityKey id)
-        {
-            this.dbSet.RemoveRange(this.dbSet.Where(x => x.Id.Equals(id)));
-        }
-
         public virtual void Delete(TDestinationKey id)
         {
             this.dbSet.RemoveRange(this.dbSet.Where(x => x.Id.Equals(id)));
@@ -60,14 +55,14 @@ namespace MappingRepository
             this.dbSet.RemoveRange(this.dbSet.Where(predicate));
         }
 
-        public virtual void Edit(TDestination obj)
-        {
-            var entity = this.GetById(obj.Id);
+        //public virtual void Edit(TDestination obj)
+        //{
+        //    var entity = this.GetById(obj.Id);
 
-            this.mapper.Map(obj, entity);
+        //    this.mapper.Map(obj, entity);
 
-            this.dbContext.SaveChanges();
-        }
+        //    this.dbContext.SaveChanges();
+        //}
 
         public IList<TDestination> FindBy(Expression<Func<TEntity, bool>> predicate)
         {
@@ -80,11 +75,6 @@ namespace MappingRepository
         }
 
         public TDestination GetById(TEntityKey id)
-        {
-            return this.dbSet.Where(x => x.Id.Equals(id)).ProjectToSingleOrDefault<TDestination>(this.mapperConfig);
-        }
-
-        public TDestination GetById(TDestinationKey id)
         {
             return this.dbSet.Where(x => x.Id.Equals(id)).ProjectToSingleOrDefault<TDestination>(this.mapperConfig);
         }

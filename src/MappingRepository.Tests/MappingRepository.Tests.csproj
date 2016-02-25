@@ -70,13 +70,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Mocks\CustomerRepository.cs" />
-    <Compile Include="Mocks\DbContext.cs" />
+    <Compile Include="Mocks\Data.cs" />
+    <Compile Include="Mocks\Repositories\CustomerRepository.cs" />
+    <Compile Include="Mocks\Context\DbContext.cs" />
     <Compile Include="Mocks\DomainObjects\Order.cs" />
     <Compile Include="Mocks\DomainObjects\Customer.cs" />
     <Compile Include="Mocks\Entities\Customer.cs" />
     <Compile Include="Mocks\Entities\Order.cs" />
-    <Compile Include="Mocks\MapperTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests.cs" />
   </ItemGroup>
@@ -91,6 +91,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

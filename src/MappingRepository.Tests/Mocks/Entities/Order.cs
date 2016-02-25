@@ -3,7 +3,7 @@ using System;
 
 namespace MappingRepository.Tests.Mocks.Entities
 {
-    internal class Order : IMappingRepositoryEntity<Guid>
+    public class Order : IMappingRepositoryEntity<Guid>
     {
         public Guid Id { get; set; }
 
