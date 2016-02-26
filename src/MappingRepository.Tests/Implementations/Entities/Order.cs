@@ -1,6 +1,7 @@
 ﻿using MappingRepository.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MappingRepository.Tests.Implementations.Entities
 {
@@ -9,6 +10,7 @@ namespace MappingRepository.Tests.Implementations.Entities
         [Key]
         public Guid Id { get; set; }
 
+        [ForeignKey("Customer")]
         public Guid CustomerId { get; set; }
 
         public int Number { get; set; }

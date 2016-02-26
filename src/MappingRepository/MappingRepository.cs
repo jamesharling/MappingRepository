@@ -27,7 +27,7 @@ namespace MappingRepository
 
             this.dbContext.SaveChanges();
 
-            return newEntity.Id;
+            return entity.Id;
         }
 
         public virtual int AddRange(IEnumerable<TDestination> objs)

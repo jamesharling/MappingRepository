@@ -10,6 +10,6 @@ namespace MappingRepository.Tests.Implementations.DomainObjects
 
         public string Name { get; set; }
 
-        public IEnumerable<Order> Orders { get; set; }
+        //public IEnumerable<Order> Orders { get; set; }
     }
 }
