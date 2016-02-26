@@ -8,27 +8,26 @@ using System.Linq.Expressions;
 
 namespace MappingRepository
 {
-    public abstract class MappingRepository<TEntity, TEntityKey, TDestination, TDestinationKey>
-        where TEntity : class, IMappingRepositoryEntity<TEntityKey>
-        where TDestination : IMappingRepositoryDestination<TDestinationKey>
-        where TEntityKey : IEquatable<TEntityKey>, IEquatable<TDestinationKey>
-        where TDestinationKey : IEquatable<TDestinationKey>, IEquatable<TEntityKey>
+    public abstract class MappingRepository<TEntity, TDestination, TKey>
+        where TEntity : class, IMappingRepositoryEntity<TKey>
+        where TDestination : IMappingRepositoryDestination<TKey>
+        where TKey : IEquatable<TKey>
     {
-        public MappingRepository(IMappingRepositoryDbContext dbContext, IMapper mapper)
+        public MappingRepository(DbContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
         }
 
-        public virtual TDestinationKey Add(TDestination obj)
+        public virtual TKey Add(TDestination obj)
         {
             var entity = this.mapper.Map<TEntity>(obj);
 
-            this.dbSet.Add(entity);
+            var newEntity = this.dbSet.Add(entity);
 
             this.dbContext.SaveChanges();
 
-            return this.mapper.Map<TDestination>(entity).Id;
+            return newEntity.Id;
         }
 
         public virtual int AddRange(IEnumerable<TDestination> objs)
@@ -45,24 +44,28 @@ namespace MappingRepository
             return this.dbSet.Any(predicate);
         }
 
-        public virtual void Delete(TDestinationKey id)
+        public virtual int Delete(TKey id)
         {
             this.dbSet.RemoveRange(this.dbSet.Where(x => x.Id.Equals(id)));
+
+            return this.dbContext.SaveChanges();
         }
 
-        public virtual void DeleteRange(Expression<Func<TEntity, bool>> predicate)
+        public virtual int DeleteRange(Expression<Func<TEntity, bool>> predicate)
         {
             this.dbSet.RemoveRange(this.dbSet.Where(predicate));
+
+            return this.dbContext.SaveChanges();
         }
 
-        //public virtual void Edit(TDestination obj)
-        //{
-        //    var entity = this.GetById(obj.Id);
+        public virtual void Edit(TDestination obj)
+        {
+            var entity = this.GetById(obj.Id);
 
-        //    this.mapper.Map(obj, entity);
+            this.mapper.Map(obj, entity);
 
-        //    this.dbContext.SaveChanges();
-        //}
+            this.dbContext.SaveChanges();
+        }
 
         public IList<TDestination> FindBy(Expression<Func<TEntity, bool>> predicate)
         {
@@ -74,7 +77,7 @@ namespace MappingRepository
             return this.dbSet.Where(predicate).ProjectToFirstOrDefault<TDestination>(this.mapperConfig);
         }
 
-        public TDestination GetById(TEntityKey id)
+        public TDestination GetById(TKey id)
         {
             return this.dbSet.Where(x => x.Id.Equals(id)).ProjectToSingleOrDefault<TDestination>(this.mapperConfig);
         }
@@ -99,7 +102,7 @@ namespace MappingRepository
             return this.dbSet.ProjectToQueryable<TCustomType>(this.mapperConfig);
         }
 
-        private IMappingRepositoryDbContext dbContext;
+        private DbContext dbContext;
         private IMapper mapper;
 
         private DbSet<TEntity> dbSet => this.dbContext.Set<TEntity>();

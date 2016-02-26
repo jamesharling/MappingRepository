@@ -1,13 +1,12 @@
-﻿using MappingRepository.Tests.Mocks.Entities;
+﻿using MappingRepository.Tests.Implementations.Entities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MappingRepository.Tests.Mocks
 {
     internal class Data
     {
-        internal static IQueryable<Customer> Customers
+        internal static List<Customer> Customers
         {
             get
             {
@@ -27,11 +26,11 @@ namespace MappingRepository.Tests.Mocks
                     Surname = "Barnes"
                 });
 
-                return customers.AsQueryable();
+                return customers;
             }
         }
 
-        internal static IQueryable<Order> Orders
+        internal static List<Order> Orders
         {
             get
             {
@@ -77,7 +76,7 @@ namespace MappingRepository.Tests.Mocks
                     Item = "Romeo and Juliet"
                 });
 
-                return orders.AsQueryable();
+                return orders;
             }
         }
     }

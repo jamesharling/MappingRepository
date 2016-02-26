@@ -1,7 +1,7 @@
 ﻿using MappingRepository.Interfaces;
 using System;
 
-namespace MappingRepository.Tests.Mocks.DomainObjects
+namespace MappingRepository.Tests.Implementations.DomainObjects
 {
     public class Order : IMappingRepositoryDestination<Guid>
     {
