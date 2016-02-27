@@ -1,4 +1,4 @@
-﻿using MappingRepository.Interfaces;
+﻿using FakeDbSet;
 using MappingRepository.Tests.Implementations.Entities;
 using System.Data.Entity;
 

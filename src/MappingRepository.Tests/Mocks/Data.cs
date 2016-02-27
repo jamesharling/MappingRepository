@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MappingRepository.Tests.Mocks
 {
-    internal class Data
+    internal static class Data
     {
         internal static List<Customer> Customers
         {

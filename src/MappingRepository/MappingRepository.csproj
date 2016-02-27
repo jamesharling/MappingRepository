@@ -69,8 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\IMappingRepositoryDbContext.cs" />
-    <Compile Include="Interfaces\IMappingRepositoryEntity.cs" />
     <Compile Include="MappingRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryableExtensions.cs" />

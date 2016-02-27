@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 namespace MappingRepository
 {
     public abstract class MappingRepository<TEntity, TDestination, TKey>
-        where TEntity : class, IMappingRepositoryEntity<TKey>
+        where TEntity : class, IMappingRepositoryEntity<TKey>, new()
         where TDestination : IMappingRepositoryDestination<TKey>
         where TKey : IEquatable<TKey>
     {
@@ -46,7 +46,12 @@ namespace MappingRepository
 
         public virtual int Delete(TKey id)
         {
-            this.dbSet.RemoveRange(this.dbSet.Where(x => x.Id.Equals(id)));
+            var entity = new TEntity()
+            {
+                Id = id
+            };
+
+            //this.dbContext.Entry(entity).State = EntityState.Deleted;
 
             return this.dbContext.SaveChanges();
         }
@@ -58,13 +63,13 @@ namespace MappingRepository
             return this.dbContext.SaveChanges();
         }
 
-        public virtual void Edit(TDestination obj)
+        public virtual int Edit(TDestination obj)
         {
             var entity = this.GetById(obj.Id);
 
             this.mapper.Map(obj, entity);
 
-            this.dbContext.SaveChanges();
+            return this.dbContext.SaveChanges();
         }
 
         public IList<TDestination> FindBy(Expression<Func<TEntity, bool>> predicate)

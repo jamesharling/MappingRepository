@@ -1,49 +1,16 @@
-﻿using Moq;
+﻿using MappingRepository.Tests.Implementations.Entities;
+using Moq;
 using Moq.Language;
 using Moq.Language.Flow;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace MappingRepository.Tests.Mocks
 {
     public static class EFMockHelpers
     {
-        public static IReturnsResult<TContext> ReturnsDbSet<TEntity, TContext>(this IReturns<TContext, DbSet<TEntity>> setup, TEntity[] entities)
-            where TEntity : class
-            where TContext : DbContext
-        {
-            var mockSet = CreateMockSet(entities);
-            return setup.Returns(mockSet.Object);
-        }
-
-        public static IReturnsResult<TContext> ReturnsDbSet<TEntity, TContext>(this IReturns<TContext, DbSet<TEntity>> setup, IQueryable<TEntity> entities)
-            where TEntity : class
-            where TContext : DbContext
-        {
-            var mockSet = CreateMockSet(entities.ToList());
-            return setup.Returns(mockSet.Object);
-        }
-
-        public static IReturnsResult<TContext> ReturnsDbSet<TEntity, TContext>(this IReturns<TContext, DbSet<TEntity>> setup, IEnumerable<TEntity> entities)
-            where TEntity : class
-            where TContext : DbContext
-        {
-            var mockSet = CreateMockSet(entities.ToList());
-            return setup.Returns(mockSet.Object);
-        }
-
-        public static IReturnsResult<TContext> ReturnsDbSet<TEntity, TContext>(this IReturns<TContext, DbSet<TEntity>> setup, IList<TEntity> entities)
-            where TEntity : class
-            where TContext : DbContext
-        {
-            var mockSet = CreateMockSet(entities);
-            return setup.Returns(mockSet.Object);
-        }
-
-        private static Mock<DbSet<T>> CreateMockSet<T>(IList<T> data) where T : class
+        public static Mock<DbSet<T>> CreateMockSet<T>(List<T> data) where T : class
         {
             var queryableData = data.AsQueryable();
 
@@ -63,10 +30,36 @@ namespace MappingRepository.Tests.Mocks
                 .Returns(queryableData.GetEnumerator());
 
             mockSet
-                .Setup(m => m.Add(It.IsAny<T>()))
+                .Setup(set => set.Add(It.IsAny<T>()))
                 .Callback<T>(data.Add);
+            mockSet
+                .Setup(set => set.AddRange(It.IsAny<IEnumerable<T>>()))
+                .Callback<IEnumerable<T>>(data.AddRange);
+            mockSet
+                .Setup(set => set.Remove(It.IsAny<T>()))
+                .Callback<T>(t => data.Remove(t));
+            mockSet
+                .Setup(set => set.RemoveRange(It.IsAny<IEnumerable<T>>()))
+                .Callback<IEnumerable<T>>(ts => data.RemoveRange(0, 2));
 
             return mockSet;
+        }
+
+        public static Mock<Implementations.Context.DbContext> GetMockedContext()
+        {
+            var mockedContext = new Mock<Implementations.Context.DbContext>();
+
+            mockedContext.Setup(c => c.Set<Customer>()).ReturnsDbSet(Data.Customers);
+
+            return mockedContext;
+        }
+
+        public static IReturnsResult<TContext> ReturnsDbSet<TEntity, TContext>(this IReturns<TContext, DbSet<TEntity>> setup, List<TEntity> entities)
+                            where TEntity : class
+            where TContext : DbContext
+        {
+            var mockSet = CreateMockSet(entities);
+            return setup.Returns(mockSet.Object);
         }
     }
 }
