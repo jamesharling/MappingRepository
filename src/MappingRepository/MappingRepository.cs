@@ -51,7 +51,7 @@ namespace MappingRepository
                 Id = id
             };
 
-            //this.dbContext.Entry(entity).State = EntityState.Deleted;
+            this.dbContext.Entry(entity).State = EntityState.Deleted;
 
             return this.dbContext.SaveChanges();
         }
@@ -67,7 +67,7 @@ namespace MappingRepository
         {
             var entity = this.GetById(obj.Id);
 
-            this.mapper.Map(obj, entity);
+            entity = this.mapper.Map(obj, entity);
 
             return this.dbContext.SaveChanges();
         }
