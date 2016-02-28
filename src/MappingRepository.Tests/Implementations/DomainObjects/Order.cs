@@ -7,8 +7,8 @@ namespace MappingRepository.Tests.Implementations.DomainObjects
     {
         public Guid Id { get; set; }
 
-        public int Number { get; set; }
-
         public string Item { get; set; }
+
+        public int Number { get; set; }
     }
 }

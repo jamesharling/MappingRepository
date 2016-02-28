@@ -11,9 +11,9 @@ namespace MappingRepository.Tests.Implementations.Repositories
         public CustomerRepository(DbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         { }
 
-        public IList<DomainObjects.Customer> Queryable()
+        public int Count()
         {
-            return this.AsQueryable().ToList();
+            return this.AsQueryable().Count();
         }
 
         public IList<DomainObjects.Customer> FilteredQueryable()
@@ -21,12 +21,17 @@ namespace MappingRepository.Tests.Implementations.Repositories
             return this.AsQueryable(x => x.FirstName.Equals("Barry")).ToList();
         }
 
+        public IList<DomainObjects.Customer> GetAll()
+        {
+            return this.AsQueryable().ToList();
+        }
+
         public IList<DomainObjects.LiteCustomer> GetAllAsLite()
         {
             return this.ProjectTo<DomainObjects.LiteCustomer>().ToList();
         }
 
-        public IList<DomainObjects.Customer> GetAll()
+        public IList<DomainObjects.Customer> Queryable()
         {
             return this.AsQueryable().ToList();
         }

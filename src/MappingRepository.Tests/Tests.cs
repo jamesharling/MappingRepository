@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using MappingRepository.Tests.Implementations.Context;
-using MappingRepository.Tests.Implementations.Entities;
 using MappingRepository.Tests.Implementations.Repositories;
 using MappingRepository.Tests.Mocks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 
 namespace MappingRepository.Tests
@@ -15,27 +14,31 @@ namespace MappingRepository.Tests
     [TestClass]
     public class Tests
     {
+        public Tests()
+        {
+            AppDomain.CurrentDomain.SetData("DataDirectory", System.IO.Directory.GetCurrentDirectory());
+            Database.SetInitializer(new DbInitializer());
+        }
+
         [TestMethod]
         public void CanAdd()
         {
             var repo = this.getRepo();
 
-            var customerId = Guid.Parse("87a771b8-fa67-461b-8975-e241b51dc257");
+            int count = repo.Count();
+
+            count.Should().Be(2);
 
             var customer = new Implementations.DomainObjects.Customer()
             {
-                Id = customerId,
                 Name = "Amanda Clement"
             };
 
-            var returnId = repo.Add(customer);
+            repo.Add(customer);
 
-            returnId.Should().Be("87a771b8-fa67-461b-8975-e241b51dc257");
+            count = repo.Count();
 
-            var result = repo.GetById(Guid.Parse("87a771b8-fa67-461b-8975-e241b51dc257"));
-
-            result.Id.Should().Be("87a771b8-fa67-461b-8975-e241b51dc257");
-            result.Name.Should().Be("Amanda Clement");
+            count.Should().Be(3);
         }
 
         [TestMethod]
@@ -47,14 +50,11 @@ namespace MappingRepository.Tests
 
             var customer1 = new Implementations.DomainObjects.Customer()
             {
-                Id = Guid.NewGuid(),
-                Name
-            = "Amanda Clement"
+                Name = "Amanda Clement"
             };
 
             var customer2 = new Implementations.DomainObjects.Customer()
             {
-                Id = Guid.NewGuid(),
                 Name = "Kevin Ronalds"
             };
 
@@ -63,9 +63,9 @@ namespace MappingRepository.Tests
 
             repo.AddRange(customers);
 
-            var result = repo.GetAll();
+            var result = repo.Count();
 
-            result.Count.Should().Be(4);
+            result.Should().Be(4);
         }
 
         [TestMethod]
@@ -98,12 +98,16 @@ namespace MappingRepository.Tests
             result.Count.Should().Be(2);
         }
 
-        //[TestMethod]
+        [TestMethod]
         public void CanDelete()
         {
             var repo = this.getRepo();
 
-            var result = repo.Delete(Guid.Parse("407f8c3e-1229-466d-9e53-dd769fcc43b7"));
+            var customerToDelete = repo.FirstOrDefault(x => x.FirstName.Equals("Barry"));
+
+            customerToDelete.Should().NotBeNull();
+
+            var result = repo.Delete(customerToDelete.Id);
 
             result.Should().Be(1);
         }
@@ -123,15 +127,17 @@ namespace MappingRepository.Tests
         {
             var repo = this.getRepo();
 
-            var customer = repo.GetById(Guid.Parse("407f8c3e-1229-466d-9e53-dd769fcc43b7"));
+            var customerToEdit = repo.FirstOrDefault(x => x.FirstName.Equals("Sarah"));
 
-            customer.Name = "Sarah Moore";
+            customerToEdit.Should().NotBeNull();
 
-            var result = repo.Edit(customer);
+            customerToEdit.Name = "Sarah Moore";
 
-            //result.Should().Be(1);
+            var result = repo.Edit(customerToEdit);
 
-            customer = repo.GetById(Guid.Parse("407f8c3e-1229-466d-9e53-dd769fcc43b7"));
+            result.Should().Be(1);
+
+            var customer = repo.GetById(customerToEdit.Id);
 
             customer.Name.Should().Be("Sarah Moore");
         }
@@ -158,7 +164,7 @@ namespace MappingRepository.Tests
 
             result = repo.FirstOrDefault(x => x.FirstName.Equals("Jackie"));
 
-            result.Should().Be(null);
+            result.Should().BeNull();
         }
 
         [TestMethod]
@@ -166,7 +172,11 @@ namespace MappingRepository.Tests
         {
             var repo = this.getRepo();
 
-            var result = repo.GetById(Guid.Parse("407f8c3e-1229-466d-9e53-dd769fcc43b7"));
+            var customerToGet = repo.FirstOrDefault(x => x.FirstName.Equals("Sarah"));
+
+            customerToGet.Should().NotBeNull();
+
+            var result = repo.GetById(customerToGet.Id);
 
             result.Name.Should().Be("Sarah Barnes");
         }
@@ -214,18 +224,18 @@ namespace MappingRepository.Tests
                     cfg.CreateMap<Implementations.Entities.Order, Implementations.DomainObjects.Order>();
 
                     cfg.CreateMap<Implementations.DomainObjects.Customer, Implementations.Entities.Customer>()
-                        //.ForMember(d => d.Id, o => o.Ignore())
+                        .ForMember(d => d.Id, o => o.Ignore())
                         .ForMember(d => d.FirstName, o => o.MapFrom(s => s.Name.Split(' ')[0]))
                         .ForMember(d => d.Surname, o => o.MapFrom(s => s.Name.Split(' ')[1]));
 
-                    cfg.CreateMap<Implementations.DomainObjects.Order, Implementations.Entities.Order>();
-                        //.ForMember(d => d.Id, o => o.Ignore());
+                    cfg.CreateMap<Implementations.DomainObjects.Order, Implementations.Entities.Order>()
+                        .ForMember(d => d.Id, o => o.Ignore());
                 });
 
                 return config.CreateMapper();
             }
         }
 
-        private CustomerRepository getRepo() => new CustomerRepository(EFMockHelpers.GetMockedContext().Object, this.mapper);
+        private CustomerRepository getRepo() => new CustomerRepository(new Implementations.Context.DbContext(), this.mapper);
     }
 }

@@ -23,11 +23,11 @@ namespace MappingRepository
         {
             var entity = this.mapper.Map<TEntity>(obj);
 
-            var newEntity = this.dbSet.Add(entity);
+            var result = this.dbSet.Add(entity);
 
             this.dbContext.SaveChanges();
 
-            return entity.Id;
+            return result.Id;
         }
 
         public virtual int AddRange(IEnumerable<TDestination> objs)
@@ -65,7 +65,7 @@ namespace MappingRepository
 
         public virtual int Edit(TDestination obj)
         {
-            var entity = this.GetById(obj.Id);
+            var entity = this.dbSet.Find(obj.Id);
 
             entity = this.mapper.Map(obj, entity);
 
@@ -74,37 +74,37 @@ namespace MappingRepository
 
         public IList<TDestination> FindBy(Expression<Func<TEntity, bool>> predicate)
         {
-            return this.dbSet.Where(predicate).ProjectToList<TDestination>(this.mapperConfig);
+            return this.dbSet.AsNoTracking().Where(predicate).ProjectToList<TDestination>(this.mapperConfig);
         }
 
         public TDestination FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
-            return this.dbSet.Where(predicate).ProjectToFirstOrDefault<TDestination>(this.mapperConfig);
+            return this.dbSet.AsNoTracking().Where(predicate).ProjectToFirstOrDefault<TDestination>(this.mapperConfig);
         }
 
         public TDestination GetById(TKey id)
         {
-            return this.dbSet.Where(x => x.Id.Equals(id)).ProjectToSingleOrDefault<TDestination>(this.mapperConfig);
+            return this.dbSet.AsNoTracking().Where(x => x.Id.Equals(id)).ProjectToSingleOrDefault<TDestination>(this.mapperConfig);
         }
 
         public TDestination SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
-            return this.dbSet.Where(predicate).ProjectToSingleOrDefault<TDestination>(this.mapperConfig);
+            return this.dbSet.AsNoTracking().Where(predicate).ProjectToSingleOrDefault<TDestination>(this.mapperConfig);
         }
 
         protected IQueryable<TDestination> AsQueryable()
         {
-            return this.dbSet.ProjectToQueryable<TDestination>(this.mapperConfig);
+            return this.dbSet.AsNoTracking().ProjectToQueryable<TDestination>(this.mapperConfig);
         }
 
         protected IQueryable<TDestination> AsQueryable(Expression<Func<TEntity, bool>> predicate)
         {
-            return this.dbSet.Where(predicate).ProjectToQueryable<TDestination>(this.mapperConfig);
+            return this.dbSet.AsNoTracking().Where(predicate).ProjectToQueryable<TDestination>(this.mapperConfig);
         }
 
         protected IQueryable<TCustomType> ProjectTo<TCustomType>()
         {
-            return this.dbSet.ProjectToQueryable<TCustomType>(this.mapperConfig);
+            return this.dbSet.AsNoTracking().ProjectToQueryable<TCustomType>(this.mapperConfig);
         }
 
         private DbContext dbContext;

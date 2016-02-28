@@ -7,7 +7,6 @@ namespace MappingRepository.Tests.Implementations.Entities
 {
     public class Order : IMappingRepositoryEntity<Guid>
     {
-        [Key]
         public Guid Id { get; set; }
 
         [ForeignKey("Customer")]
