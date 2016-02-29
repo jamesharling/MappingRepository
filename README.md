@@ -85,5 +85,5 @@ public class Order : IMappingRepositoryEntity<Guid>
 ```
 
 ```csharp
-var highValueCustomers = repo.FindBy(x => x.Orders.Where(y => y.Total > 1000), i => i.Orders);
+var highValueCustomers = repo.FindBy(x => x.Orders.Where(y => y.Total > 1000), i => i.Orders.Select(x => x.Lines));
 ```
