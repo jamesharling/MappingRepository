@@ -22,7 +22,7 @@
     <Title>MappingRepository</Title>
     <Authors>James Harling</Authors>
     <Owners>James Harling</Owners>
-    <Summary>Simple abstraction between EF and your domain layer.</Summary>
+    <Summary>Simple abstraction between EF and your domain layer, using genericised repositories and AutoMapper.</Summary>
     <Description>Reduce your code churn when mapping between your entity and domain layers. Simply have your repositories and entities inherit from the provided classes and interfaces, define your AutoMapper config and you're done. Supports IoC injection of database context and AutoMapper configuration.</Description>
     <ReleaseNotes>
     </ReleaseNotes>
@@ -31,7 +31,7 @@
     <Copyright>Copyright © James Harling 2016</Copyright>
     <Tags>AutoMapper Map Repository Entity Framework Domain Object DTO</Tags>
     <GenerateSymbolPackage>false</GenerateSymbolPackage>
-    <Version>1.0.0-pre</Version>
+    <Version>1.0.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\MappingRepository\MappingRepository.csproj" />
