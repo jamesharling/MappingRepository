@@ -72,9 +72,9 @@ Grab your data through a number of built-in methods, or build upon the provided 
 var repo = new CustomerRepository(new DbContext(), mapper);
 
 var id = Guid.Parse("205b9dc9-1fd1-4be6-881f-f18c9a32d95a");
-var customer = repo.GetById(id);
+var customer1 = repo.GetById(id);
 
-var customer = repo.FirstOrDefault(x => x.Name.Equals("Sarah Barnes"));
+var customer2 = repo.FirstOrDefault(x => x.Name.Equals("Sarah Barnes"));
 
 var customersWithOrders = repo.FindBy(x => x.Orders.Any());
 
