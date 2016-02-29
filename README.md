@@ -69,7 +69,7 @@ private IMapper mapper
 ## Put it to use
 Grab your data through a number of built-in methods, or build upon the provided queryables to extend the base functionality:
 ```csharp
-var repo = new CustomerRepository(new DbContext(), mapper);
+var repo = new CustomerRepository(new MyContext(), mapper);
 
 var id = Guid.Parse("205b9dc9-1fd1-4be6-881f-f18c9a32d95a");
 var customer1 = repo.GetById(id);
