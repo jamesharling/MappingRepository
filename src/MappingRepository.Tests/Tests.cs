@@ -130,16 +130,6 @@ namespace MappingRepository.Tests
         }
 
         [TestMethod]
-        public void AsFilteredQueryable()
-        {
-            var repo = this.getRepo();
-
-            var result = repo.FilteredQueryable();
-
-            result.Count.Should().Be(1);
-        }
-
-        [TestMethod]
         public void AsQueryable()
         {
             var repo = this.getRepo();

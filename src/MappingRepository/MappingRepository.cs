@@ -117,9 +117,19 @@ namespace MappingRepository
             return this.dbContext.SaveChanges();
         }
 
+        /// <summary>
+        /// Edits a given entity. Throws a <see cref="ArgumentException"/> if an entity cannot be found with the given entity's key.
+        /// </summary>
+        /// <param name="obj">The entity to edit.</param>
+        /// <returns>The number of changed rows in the database.</returns>
         public virtual int Edit(TDestination obj)
         {
             var entity = this.dbSet.Find(obj.Id);
+
+            if (entity == null)
+            {
+                throw new ArgumentException("Cannot find an entity in the database with the provided entity's key.");
+            }
 
             entity = this.mapper.Map(obj, entity);
 
@@ -154,6 +164,11 @@ namespace MappingRepository
             return this.dbSet.AsNoTracking().Where(predicate).ProjectToFirstOrDefault<TDestination>(this.mapperConfig);
         }
 
+        /// <summary>
+        /// Attempts to find an entity with a given key, should one exist.
+        /// </summary>
+        /// <param name="id">The unique ID of the entity to return.</param>
+        /// <returns>The entity with the given key; otherwise null.</returns>
         public TDestination GetById(TKey id)
         {
             return this.dbSet.AsNoTracking().Where(x => x.Id.Equals(id)).ProjectToSingleOrDefault<TDestination>(this.mapperConfig);
@@ -175,19 +190,19 @@ namespace MappingRepository
         }
 
         /// <summary>
-        /// Presents a <see cref="IQueryable{TDestination}"/> object for consumption in your derived repository. 
+        /// Provides an <see cref="IQueryable{TDestination}"/> object for consumption in your derived repository. 
         /// </summary>
-        /// <returns></returns>
+        /// <returns><see cref="IQueryable{TDestination}"/> upon which further logic can be applied.</returns>
         protected IQueryable<TDestination> AsQueryable()
         {
             return this.dbSet.AsNoTracking().ProjectToQueryable<TDestination>(this.mapperConfig);
         }
 
-        protected IQueryable<TDestination> AsQueryable(Expression<Func<TEntity, bool>> predicate)
-        {
-            return this.dbSet.AsNoTracking().Where(predicate).ProjectToQueryable<TDestination>(this.mapperConfig);
-        }
-
+        /// <summary>
+        /// Projects the underlying data set to an <see cref="IQueryable{TCustomType}"/>
+        /// </summary>
+        /// <typeparam name="TCustomType">The type to which you wish you project your data set.</typeparam>
+        /// <returns><see cref="IQueryable{TCustomType}"/> upon which further logic can be applied.</returns>
         protected IQueryable<TCustomType> ProjectTo<TCustomType>()
         {
             return this.dbSet.AsNoTracking().ProjectToQueryable<TCustomType>(this.mapperConfig);

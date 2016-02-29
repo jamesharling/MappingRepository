@@ -16,11 +16,6 @@ namespace MappingRepository.Tests.Implementations.Repositories
             return this.AsQueryable().Count();
         }
 
-        public IList<DomainObjects.Customer> FilteredQueryable()
-        {
-            return this.AsQueryable(x => x.FirstName.Equals("Barry")).ToList();
-        }
-
         public IList<DomainObjects.Customer> GetAll()
         {
             return this.AsQueryable().ToList();

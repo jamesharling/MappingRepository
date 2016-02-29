@@ -72,7 +72,6 @@
   <ItemGroup>
     <Compile Include="MappingRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueryableExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MappingRepository.Interfaces\MappingRepository.Interfaces.csproj">
