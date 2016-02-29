@@ -19,12 +19,12 @@
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
     <Id>MappingRepository.Interfaces</Id>
-    <Version>1.0.0-pre</Version>
+    <Version>1.0.0</Version>
     <Title>MappingRepository.Interfaces</Title>
     <Authors>James Harling</Authors>
     <Owners>James Harling</Owners>
-    <Summary>NuGet.MappingRepository.Interfaces</Summary>
-    <Description>NuGet.MappingRepository.Interfaces</Description>
+    <Summary>Interfaces to support MappingRepository.</Summary>
+    <Description>Implement these interfaces in your entities and DTOs.</Description>
     <ReleaseNotes>
     </ReleaseNotes>
     <ProjectUrl>https://github.com/jamesharling/MappingRepository</ProjectUrl>
