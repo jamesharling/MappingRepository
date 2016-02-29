@@ -142,13 +142,21 @@ namespace MappingRepository
         /// collection if no elements satisfy the condition.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="includes">The includes to use when building the underlying queries in Entity Framework.</param>
         /// <returns>
         /// An empty collection if no element passes the test specified by predicate; otherwise, all
         /// elements in source that pass the test specified by predicate.
         /// </returns>
-        public IList<TDestination> FindBy(Expression<Func<TEntity, bool>> predicate)
+        public IList<TDestination> FindBy<TProperty>(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, TProperty>>[] includes)
         {
-            return this.dbSet.AsNoTracking().Where(predicate).ProjectToList<TDestination>(this.mapperConfig);
+            var query = this.dbSet.AsNoTracking();
+
+            foreach (var include in includes)
+            {
+                query.Include(include);
+            }
+
+            return query.Where(predicate).ProjectToList<TDestination>(this.mapperConfig);
         }
 
         /// <summary>

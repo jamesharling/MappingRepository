@@ -212,7 +212,7 @@ namespace MappingRepository.Tests
         {
             var repo = this.getRepo();
 
-            var result = repo.FindBy(x => x.FirstName.Equals("Barry"));
+            var result = repo.FindBy(x => x.FirstName.Equals("Barry"), i => i.Orders);
 
             result.Count.Should().Be(1);
             result.Single().Name.Should().Be("Barry Jenkins");
