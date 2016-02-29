@@ -223,7 +223,7 @@ namespace MappingRepository.Tests
         {
             var repo = this.getRepo();
 
-            var result = repo.FirstOrDefault(x => x.FirstName.Equals("Barry"));
+            var result = repo.FirstOrDefault(x => x.FirstName.Equals("Barry"), i => i.Orders);
 
             result.Name.Should().Be("Barry Jenkins");
 
@@ -237,7 +237,7 @@ namespace MappingRepository.Tests
         {
             var repo = this.getRepo();
 
-            var customerToGet = repo.FirstOrDefault(x => x.FirstName.Equals("Sarah"));
+            var customerToGet = repo.FirstOrDefault(x => x.FirstName.Equals("Sarah"), i => i.Orders);
 
             customerToGet.Should().NotBeNull();
 
@@ -262,7 +262,7 @@ namespace MappingRepository.Tests
         {
             var repo = this.getRepo();
 
-            var result = repo.SingleOrDefault(x => x.FirstName.Equals("Barry"));
+            var result = repo.SingleOrDefault(x => x.FirstName.Equals("Barry"), i => i.Orders);
 
             result.Name.Should().Be("Barry Jenkins");
 

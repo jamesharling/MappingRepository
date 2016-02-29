@@ -142,19 +142,16 @@ namespace MappingRepository
         /// collection if no elements satisfy the condition.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <param name="includes">The includes to use when building the underlying queries in Entity Framework.</param>
+        /// <param name="includes">The includes to use when building the underlying queries.</param>
         /// <returns>
         /// An empty collection if no element passes the test specified by predicate; otherwise, all
         /// elements in source that pass the test specified by predicate.
         /// </returns>
-        public IList<TDestination> FindBy<TProperty>(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, TProperty>>[] includes)
+        public IList<TDestination> FindBy(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
         {
             var query = this.dbSet.AsNoTracking();
 
-            foreach (var include in includes)
-            {
-                query.Include(include);
-            }
+            includes.Aggregate<Expression<Func<TEntity, object>>, IQueryable<TEntity>>(query, (q, i) => q.Include(i));
 
             return query.Where(predicate).ProjectToList<TDestination>(this.mapperConfig);
         }
@@ -164,23 +161,33 @@ namespace MappingRepository
         /// default value if no such element is found.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="includes">The includes to use when building the underlying queries.</param>
         /// <returns>
         /// default(TDestination) if source is empty or if no element passes the test specified by
         /// predicate; otherwise, the first element in source that passes the test specified by predicate.
         /// </returns>
-        public TDestination FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
+        public TDestination FirstOrDefault(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
         {
-            return this.dbSet.AsNoTracking().Where(predicate).ProjectToFirstOrDefault<TDestination>(this.mapperConfig);
+            var query = this.dbSet.AsNoTracking();
+
+            includes.Aggregate<Expression<Func<TEntity, object>>, IQueryable<TEntity>>(query, (q, i) => q.Include(i));
+
+            return query.Where(predicate).ProjectToFirstOrDefault<TDestination>(this.mapperConfig);
         }
 
         /// <summary>
         /// Attempts to find an entity with a given key, should one exist.
         /// </summary>
         /// <param name="id">The unique ID of the entity to return.</param>
+        /// <param name="includes">The includes to use when building the underlying queries.</param>
         /// <returns>The entity with the given key; otherwise null.</returns>
-        public TDestination GetById(TKey id)
+        public TDestination GetById(TKey id, params Expression<Func<TEntity, object>>[] includes)
         {
-            return this.dbSet.AsNoTracking().Where(x => x.Id.Equals(id)).ProjectToSingleOrDefault<TDestination>(this.mapperConfig);
+            var query = this.dbSet.AsNoTracking();
+
+            includes.Aggregate<Expression<Func<TEntity, object>>, IQueryable<TEntity>>(query, (q, i) => q.Include(i));
+
+            return query.Where(x => x.Id.Equals(id)).ProjectToSingleOrDefault<TDestination>(this.mapperConfig);
         }
 
         /// <summary>
@@ -189,13 +196,18 @@ namespace MappingRepository
         /// element satisfies the condition.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="includes">The includes to use when building the underlying queries.</param>
         /// <returns>
         /// The single element of the input sequence that satisfies the condition in predicate, or
         /// default(TDestination) if no such element is found.
         /// </returns>
-        public TDestination SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
+        public TDestination SingleOrDefault(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
         {
-            return this.dbSet.AsNoTracking().Where(predicate).ProjectToSingleOrDefault<TDestination>(this.mapperConfig);
+            var query = this.dbSet.AsNoTracking();
+
+            includes.Aggregate<Expression<Func<TEntity, object>>, IQueryable<TEntity>>(query, (q, i) => q.Include(i));
+
+            return query.Where(predicate).ProjectToSingleOrDefault<TDestination>(this.mapperConfig);
         }
 
         /// <summary>
@@ -205,9 +217,31 @@ namespace MappingRepository
         /// <returns>
         /// <see cref="IQueryable{TDestination}"/> upon which further logic can be applied.
         /// </returns>
-        protected IQueryable<TDestination> AsQueryable()
+        protected IQueryable<TDestination> AsQueryable(params Expression<Func<TEntity, object>>[] includes)
         {
-            return this.dbSet.AsNoTracking().ProjectToQueryable<TDestination>(this.mapperConfig);
+            var query = this.dbSet.AsNoTracking();
+
+            includes.Aggregate<Expression<Func<TEntity, object>>, IQueryable<TEntity>>(query, (q, i) => q.Include(i));
+
+            return query.ProjectToQueryable<TDestination>(this.mapperConfig);
+        }
+
+        /// <summary>
+        /// Provides a filtered <see cref="IQueryable{TDestination}"/> object for consumption in your
+        /// derived repository.
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="includes">The includes to use when building the underlying queries.</param>
+        /// <returns>
+        /// <see cref="IQueryable{TDestination}"/> upon which further logic can be applied.
+        /// </returns>
+        protected IQueryable<TDestination> AsFilteredQueryable(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
+        {
+            var query = this.dbSet.AsNoTracking();
+
+            includes.Aggregate<Expression<Func<TEntity, object>>, IQueryable<TEntity>>(query, (q, i) => q.Include(i));
+
+            return query.Where(predicate).ProjectToQueryable<TDestination>(this.mapperConfig);
         }
 
         /// <summary>
@@ -217,9 +251,13 @@ namespace MappingRepository
         /// The type to which you wish you project your data set.
         /// </typeparam>
         /// <returns><see cref="IQueryable{TCustomType}"/> upon which further logic can be applied.</returns>
-        protected IQueryable<TCustomType> ProjectTo<TCustomType>()
+        protected IQueryable<TCustomType> ProjectTo<TCustomType>(params Expression<Func<TEntity, object>>[] includes)
         {
-            return this.dbSet.AsNoTracking().ProjectToQueryable<TCustomType>(this.mapperConfig);
+            var query = this.dbSet.AsNoTracking();
+
+            includes.Aggregate<Expression<Func<TEntity, object>>, IQueryable<TEntity>>(query, (q, i) => q.Include(i));
+
+            return query.ProjectToQueryable<TCustomType>(this.mapperConfig);
         }
     }
 }
