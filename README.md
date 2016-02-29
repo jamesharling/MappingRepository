@@ -39,6 +39,11 @@ public class CustomerDto : IMappingRepositoryDestination<Guid>
 }
 ```
 
+If you want to use IoC to inject your database context, have it implement IMappingRepositoryContext:
+```csharp
+public class MyContext : System.Data.Entity.DbContext, IMappingRepositoryContext
+```
+
 ## Mapping objects
 Define your maps with AutoMapper's non-static API:
 ```csharp
@@ -65,7 +70,15 @@ private IMapper mapper
 Grab your data through a number of built-in methods, or build upon the provided queryables to extend the base functionality:
 ```csharp
 var repo = new CustomerRepository(new DbContext(), mapper);
+
+var id = Guid.Parse("205b9dc9-1fd1-4be6-881f-f18c9a32d95a");
+var customer = repo.GetById(id);
+
 var customer = repo.FirstOrDefault(x => x.Name.Equals("Sarah Barnes"));
+
+var customersWithOrders = repo.FindBy(x => x.Orders.Any());
+
+var customerDropDownList = repo.ProjectTo<CustomerDropDown>();
 ```
 
 ## Efficiency
