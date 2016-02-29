@@ -6,7 +6,7 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace MappingRepository.Tests.Implementations.Context
 {
-    public class DbContext : System.Data.Entity.DbContext
+    public class DbContext : System.Data.Entity.DbContext, IMappingRepositoryContext
     {
         public DbContext() : base("Default")
         {

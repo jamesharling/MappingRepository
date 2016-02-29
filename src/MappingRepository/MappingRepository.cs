@@ -22,7 +22,7 @@ namespace MappingRepository
         where TDestination : IMappingRepositoryDestination<TKey>
         where TKey : IEquatable<TKey>
     {
-        private DbContext dbContext;
+        private IMappingRepositoryContext dbContext;
 
         private IMapper mapper;
 
@@ -35,7 +35,7 @@ namespace MappingRepository
         /// <param name="mapper">
         /// An AutoMapper IMapper instance, containing the maps and configuration for mapping operations.
         /// </param>
-        protected MappingRepository(DbContext dbContext, IMapper mapper)
+        protected MappingRepository(IMappingRepositoryContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
@@ -118,7 +118,8 @@ namespace MappingRepository
         }
 
         /// <summary>
-        /// Edits a given entity. Throws a <see cref="ArgumentException"/> if an entity cannot be found with the given entity's key.
+        /// Edits a given entity. Throws a <see cref="ArgumentException"/> if an entity cannot be
+        /// found with the given entity's key.
         /// </summary>
         /// <param name="obj">The entity to edit.</param>
         /// <returns>The number of changed rows in the database.</returns>
@@ -190,9 +191,12 @@ namespace MappingRepository
         }
 
         /// <summary>
-        /// Provides an <see cref="IQueryable{TDestination}"/> object for consumption in your derived repository. 
+        /// Provides an <see cref="IQueryable{TDestination}"/> object for consumption in your
+        /// derived repository.
         /// </summary>
-        /// <returns><see cref="IQueryable{TDestination}"/> upon which further logic can be applied.</returns>
+        /// <returns>
+        /// <see cref="IQueryable{TDestination}"/> upon which further logic can be applied.
+        /// </returns>
         protected IQueryable<TDestination> AsQueryable()
         {
             return this.dbSet.AsNoTracking().ProjectToQueryable<TDestination>(this.mapperConfig);
@@ -201,7 +205,9 @@ namespace MappingRepository
         /// <summary>
         /// Projects the underlying data set to an <see cref="IQueryable{TCustomType}"/>
         /// </summary>
-        /// <typeparam name="TCustomType">The type to which you wish you project your data set.</typeparam>
+        /// <typeparam name="TCustomType">
+        /// The type to which you wish you project your data set.
+        /// </typeparam>
         /// <returns><see cref="IQueryable{TCustomType}"/> upon which further logic can be applied.</returns>
         protected IQueryable<TCustomType> ProjectTo<TCustomType>()
         {

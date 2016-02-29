@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|AnyCPU">
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|AnyCPU">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>9ca220cc-5261-4610-9865-c391f817f0fb</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NuProjPath Condition=" '$(NuProjPath)' == '' ">$(MSBuildExtensionsPath)\NuProj\</NuProjPath>
+  </PropertyGroup>
+  <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
+  <PropertyGroup Label="Configuration">
+    <Id>MappingRepository</Id>
+    <Title>MappingRepository</Title>
+    <Authors>James Harling</Authors>
+    <Owners>James Harling</Owners>
+    <Summary>Simple abstraction between EF and your domain layer.</Summary>
+    <Description>Reduce your code churn when mapping between your entity and domain layers. Simply have your repositories and entities inherit from the provided classes and interfaces, define your AutoMapper config and you're done. Supports IoC injection of database context and AutoMapper configuration.</Description>
+    <ReleaseNotes>
+    </ReleaseNotes>
+    <ProjectUrl>https://github.com/jamesharling/MappingRepository</ProjectUrl>
+    <LicenseUrl>https://github.com/jamesharling/MappingRepository/blob/master/LICENSE</LicenseUrl>
+    <Copyright>Copyright © James Harling 2016</Copyright>
+    <Tags>AutoMapper Map Repository Entity Framework Domain Object DTO</Tags>
+    <GenerateSymbolPackage>false</GenerateSymbolPackage>
+    <Version>1.0.0-pre</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MappingRepository\MappingRepository.csproj" />
+    <ProjectReference Include="..\NuGet.MappingRepository.Interfaces\NuGet.MappingRepository.Interfaces.nuproj" />
+  </ItemGroup>
+  <Import Project="$(NuProjPath)\NuProj.targets" />
+</Project>
