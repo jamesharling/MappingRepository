@@ -69,4 +69,21 @@ var customer = repo.FirstOrDefault(x => x.Name.Equals("Sarah Barnes"));
 ```
 
 ## Efficiency
-MappingRepository utilises projections, meaning EF will only select the data it needs to populate your DTOs. It also includes support for DelegateDecompiler, allowing the querying of computed properties in your maps, etc.
+MappingRepository utilises projections, meaning EF will only select the data it needs to populate your DTOs. It also includes support for DelegateDecompiler, allowing the querying of computed properties in your maps.
+
+```csharp
+public class Order : IMappingRepositoryEntity<Guid>
+{
+    public Guid Id;
+    public Guid CustomerId;
+    
+    public ICollection<Line> Lines;
+    
+    [Computed]
+    public string Total => this.Lines.Sum(x => x.Amount);
+}
+```
+
+```csharp
+var highValueCustomers = repo.FindBy(x => x.Orders.Where(y => y.Total > 1000), i => i.Orders);
+```
