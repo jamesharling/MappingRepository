@@ -3,8 +3,11 @@
 Reduce your code churn when mapping between your entity and domain layers. Simply have your repositories and entities inherit from the provided classes and interfaces, define your AutoMapper config and you're done. Supports IoC injection of database context and AutoMapper configuration.
 
 ## Getting started
+In your project that will hold domain layer repositories:
+`Install-Package MappingRepository`
 
-`Install-Package AutoMapper`
+In your projects that hold DTOs and EF Entities:
+`Install-Package MappingRepository.Interfaces`
 
 ## Deriving from the provided classes
 Derive your own repository from the MappingRepository base class:
@@ -13,6 +16,26 @@ public class CustomerRepository : MappingRepository<Customer, CustomerDto, Guid>
 {
     public CustomerRepository(IMappingRepositoryContext dbContext, IMapper mapper) : base(dbContext, mapper)
     { }
+}
+```
+
+## Implementing the interfaces
+Have your entities and DTOs implement the supplied interfaces. Your objects on both sides must implement a common key type, e.g. `Guid` or `int`.
+```csharp
+public class Customer : IMappingRepositoryEntity<Guid>
+{
+    public Guid Id;
+    public string FirstName;
+    public string Surname;
+    
+    [Computed]
+    public string Name => this.FirstName + " " + this.Surname;
+}
+
+public class CustomerDto : IMappingRepositoryDestination<Guid>
+{
+    public Guid Id;
+    public string Name;
 }
 ```
 
@@ -44,3 +67,6 @@ Grab your data through a number of built-in methods, or build upon the provided 
 var repo = new CustomerRepository(new DbContext(), mapper);
 var customer = repo.FirstOrDefault(x => x.Name.Equals("Sarah Barnes"));
 ```
+
+## Efficiency
+MappingRepository utilises projections, meaning EF will only select the data it needs to populate your DTOs. It also includes support for DelegateDecompiler, allowing the querying of computed properties in your maps, etc.
