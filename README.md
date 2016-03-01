@@ -14,7 +14,8 @@ Derive your own repository from the MappingRepository base class:
 ```csharp
 public class CustomerRepository : MappingRepository<Customer, CustomerDto, Guid>
 {
-    public CustomerRepository(IMappingRepositoryContext dbContext, IMapper mapper) : base(dbContext, mapper)
+    public CustomerRepository(IMappingRepositoryContext dbContext, IMapper mapper)
+        : base(dbContext, mapper)
     { }
 }
 ```
