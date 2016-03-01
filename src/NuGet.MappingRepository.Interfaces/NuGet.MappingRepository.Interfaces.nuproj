@@ -19,7 +19,7 @@
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
     <Id>MappingRepository.Interfaces</Id>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Title>MappingRepository.Interfaces</Title>
     <Authors>James Harling</Authors>
     <Owners>James Harling</Owners>
@@ -32,6 +32,7 @@
     <Copyright>Copyright © James Harling 2016</Copyright>
     <Tags>AutoMapper Map Repository Entity Framework Domain Object DTO</Tags>
     <GenerateSymbolPackage>false</GenerateSymbolPackage>
+    <IconUrl>https://raw.githubusercontent.com/jamesharling/MappingRepository/master/nuget-icon.png</IconUrl>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\MappingRepository.Interfaces\MappingRepository.Interfaces.csproj" />
