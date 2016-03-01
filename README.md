@@ -47,23 +47,17 @@ public class MyContext : System.Data.Entity.DbContext, IMappingRepositoryContext
 ## Mapping objects
 Define your maps with AutoMapper's non-static API:
 ```csharp
-private IMapper mapper
+var config = new MapperConfiguration(cfg =>
 {
-    get
-    {
-        var config = new MapperConfiguration(cfg =>
-        {
-            cfg.CreateMap<Customer, CustomerDto>();
-            
-            cfg.CreateMap<CustomerDto, Customer>()
-                .ForMember(d => d.Id, o => o.Ignore())
-                .ForMember(d => d.FirstName, o => o.MapFrom(s => s.Name.Split(' ')[0]))
-                .ForMember(d => d.Surname, o => o.MapFrom(s => s.Name.Split(' ')[1]));
-        });
+    cfg.CreateMap<Customer, CustomerDto>();
+    
+    cfg.CreateMap<CustomerDto, Customer>()
+        .ForMember(d => d.Id, o => o.Ignore())
+        .ForMember(d => d.FirstName, o => o.MapFrom(s => s.Name.Split(' ')[0]))
+        .ForMember(d => d.Surname, o => o.MapFrom(s => s.Name.Split(' ')[1]));
+});
 
-        return config.CreateMapper();
-    }
-}
+var mapper = config.CreateMapper();
 ```
 
 ## Put it to use
