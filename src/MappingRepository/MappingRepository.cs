@@ -247,6 +247,7 @@ namespace MappingRepository
         /// <summary>
         /// Projects the underlying data set to an <see cref="IQueryable{TCustomType}"/>
         /// </summary>
+        /// <param name="includes">The includes to use when building the underlying queries.</param>
         /// <typeparam name="TCustomType">
         /// The type to which you wish you project your data set.
         /// </typeparam>
@@ -258,6 +259,24 @@ namespace MappingRepository
             includes.Aggregate<Expression<Func<TEntity, object>>, IQueryable<TEntity>>(query, (q, i) => q.Include(i));
 
             return query.ProjectToQueryable<TCustomType>(this.mapperConfig);
+        }
+
+        /// <summary>
+        /// Projects the underlying data set to an <see cref="IQueryable{TCustomType}"/>
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="includes">The includes to use when building the underlying queries.</param>
+        /// <typeparam name="TCustomType">
+        /// The type to which you wish you project your data set.
+        /// </typeparam>
+        /// <returns><see cref="IQueryable{TCustomType}"/> upon which further logic can be applied.</returns>
+        protected IQueryable<TCustomType> ProjectTo<TCustomType>(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
+        {
+            var query = this.dbSet.AsNoTracking();
+
+            includes.Aggregate<Expression<Func<TEntity, object>>, IQueryable<TEntity>>(query, (q, i) => q.Include(i));
+
+            return query.Where(predicate).ProjectToQueryable<TCustomType>(this.mapperConfig);
         }
     }
 }
