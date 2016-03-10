@@ -26,6 +26,11 @@ namespace MappingRepository.Tests.Implementations.Repositories
             return this.ProjectTo<DomainObjects.LiteCustomer>().ToList();
         }
 
+        public IList<DomainObjects.LiteCustomer> GetAllAsLiteWithMultipleOrders()
+        {
+            return this.ProjectTo<DomainObjects.LiteCustomer>(x => x.Orders.Count > 2).ToList();
+        }
+
         public IList<DomainObjects.Customer> Queryable()
         {
             return this.AsQueryable().ToList();
