@@ -258,6 +258,17 @@ namespace MappingRepository.Tests
         }
 
         [TestMethod]
+        public void ProjectToFiltered()
+        {
+            var repo = this.getRepo();
+
+            var result = repo.GetAllAsLiteWithMultipleOrders();
+
+            result.Count.Should().Be(1);
+            result.First().GetType().Should().Be(typeof(Implementations.DomainObjects.LiteCustomer));
+        }
+
+        [TestMethod]
         public void SingleOrDefault()
         {
             var repo = this.getRepo();

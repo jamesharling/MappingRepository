@@ -227,8 +227,8 @@ namespace MappingRepository
         }
 
         /// <summary>
-        /// Provides a filtered <see cref="IQueryable{TDestination}"/> object for consumption in your
-        /// derived repository.
+        /// Provides a filtered <see cref="IQueryable{TDestination}"/> object for consumption in
+        /// your derived repository.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="includes">The includes to use when building the underlying queries.</param>
